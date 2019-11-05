@@ -1,8 +1,10 @@
 ---
-title: "Machine Learning 2019: Feature Selection"
+title: 'Machine Learning 2019: Feature Selection'
 author: "Sonali Narang"
-date: October 24, 2019
-output: pdf_document
+date: "October 24, 2019"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +34,7 @@ Predictor Variable: Class- benign or malignant
 data(BreastCancer)
 head(BreastCancer)
 dim(BreastCancer)
-summary(BreastCancer$Class)
+#summary(BreastCancer$Class)
 ```
 
 ## Feature Selection Using Filter Methods: Pearson's Correlation 
@@ -60,10 +62,10 @@ correlation_matrix = cor(BreastCancer_num[,1:10])
 
 #visualize correlation matrix
 library(corrplot)
-corrplot(correlation_matrix, order = "hclust")
+corrplot(correlation_matrix)#, order = "hclust"
 
 #apply correlation filter of 0.7
-highly_correlated <- colnames(BreastCancer[, -1])[findCorrelation(correlation_matrix, cutoff = 0.7, verbose = TRUE)]
+highly_correlated <- colnames(BreastCancer[, -1])[findCorrelation(correlation_matrix, cutoff = 0.65, verbose = TRUE)]
 
 #which features are highly correlated and can be removed
 highly_correlated
@@ -108,7 +110,7 @@ Least Absolute Shrinkage and Selection Operator (LASSO) regression
 set.seed(24)
 
 #convert data
-x = x <- as.matrix(BreastCancer_num[,1:10])
+x = as.matrix(BreastCancer_num[,1:10])
 y = as.double(as.matrix(ifelse(BreastCancer_num[,11]=='benign', 0, 1))) 
 
 #fit Lasso model 
@@ -151,7 +153,7 @@ train_classification <- BreastCancer_num[train_pos, ]
 test_classification <- BreastCancer_num[-train_pos, ]
 
 #fit a model
-rfmodel = randomForest(Class ~ Id + Cl.thickness + Cell.size + Cell.shape + Marg.adhesion + Epith.c.size + Bare.nuclei + Bl.cromatin + Normal.nucleoli +  Mitoses, data=train_classification,  importance = TRUE, oob.times = 15, confusion = TRUE)
+rfmodel = randomForest(Class ~ Id + Cl.thickness + Cell.size + Cell.shape + Marg.adhesion + Epith.c.size + Bare.nuclei + Bl.cromatin + Normal.nucleoli +  Mitoses, data=train_classification,  importance = TRUE, oob.times = 30, confusion = TRUE)
 
 #rank features based on importance 
 importance(rfmodel)
@@ -163,7 +165,27 @@ importance(rfmodel)
 ## Homework
 
 1. Compare the most important features from at least 2 different classes of feature selection methods covered in this tutorial with any reasonable machine learning dataset from mlbench. Do these feature selection methods provide similar results? 
+```{r}
+# The most important features for the four methods in the above order are, Mitosis, Cell.size, Cl.thickness, and Bare.nuclei. It doesn't make too much sense for me to compared the most important features across methods since the most important ones in a study should always be the parameters the researchers are most interested at. Therefore, I think the significance of feature selection lies in its suggestion of potentially redundant features in the data. So in the following part I'll discuss the 4 least important features picked out by the methods.
+# Using mlbench Breast Cancer data, the 4 methods listed in this tutorial yielded relatively similar results as to which variables are redundant. In essence, these methods find variables that are either highly related to others or have no contribution to the final prediction thus can be potentially eliminated from the analysis for the sake of model simplicity.
+
+# Correlation method found that "Cell.shape", "Marg.adhesion", "Normal.nucleoli", and "Bl.cromatin" are highly correlated with the rest of variables thus are redundant.
+# RFE method found Mitosis, Normal.nucleoli, Marg.adhesion, and Cl.thickness were the least helpful in making predictions of cancer malignancy.
+# Lasso method Epith.c.size, Cell.size, Normal.nucleoli, and Marg.adhesion
+# Random forest method Mitosis, Epith.c.size, Marg.adhesion，and Normal.nucleoli
+
+# These four methods all agreed that Marg.adhesion and Normal.nucleoli were redundant for the prediction. Other than those, Mitosis and Epith.c.size were also implicated. Overall, the later 3 methods were more similar since they access the importance of variables basing on their contribution to final predictions (although this type of methods are very likely to overfit the data).
+
+```
 
 2. Attempt a feature selection method not covered in this tutorial (backward elimination, forward propogation, etc.)
+```{r}
+# Feature selection with logistic regression
+# Fit a logistic regression model
+logi_model = glm(Class~., data=train_classification,family = "binomial")
 
+# Summary
+summary(logi_model)
+# The most important featrure here is Cl.thickness, the least important ones are again Epith.c.size, Cell.size, Cell.shape, and Marg.adhesion, similar with methods described above.
+```
 
