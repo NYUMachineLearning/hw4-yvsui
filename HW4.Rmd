@@ -165,18 +165,21 @@ importance(rfmodel)
 ## Homework
 
 1. Compare the most important features from at least 2 different classes of feature selection methods covered in this tutorial with any reasonable machine learning dataset from mlbench. Do these feature selection methods provide similar results? 
-```{r}
-# The most important features for the four methods in the above order are, Mitosis, Cell.size, Cl.thickness, and Bare.nuclei. It doesn't make too much sense for me to compared the most important features across methods since the most important ones in a study should always be the parameters the researchers are most interested at. Therefore, I think the significance of feature selection lies in its suggestion of potentially redundant features in the data. So in the following part I'll discuss the 4 least important features picked out by the methods.
-# Using mlbench Breast Cancer data, the 4 methods listed in this tutorial yielded relatively similar results as to which variables are redundant. In essence, these methods find variables that are either highly related to others or have no contribution to the final prediction thus can be potentially eliminated from the analysis for the sake of model simplicity.
 
-# Correlation method found that "Cell.shape", "Marg.adhesion", "Normal.nucleoli", and "Bl.cromatin" are highly correlated with the rest of variables thus are redundant.
-# RFE method found Mitosis, Normal.nucleoli, Marg.adhesion, and Cl.thickness were the least helpful in making predictions of cancer malignancy.
-# Lasso method Epith.c.size, Cell.size, Normal.nucleoli, and Marg.adhesion
-# Random forest method Mitosis, Epith.c.size, Marg.adhesion，and Normal.nucleoli
+The most important features for the four methods in the above order are, Mitosis, Cell.size, Cl.thickness, and Bare.nuclei. It doesn't make too much sense for me to compared the most important features across methods since the most important ones in a study should always be the parameters the researchers are most interested at. Therefore, I think the significance of feature selection lies in its suggestion of potentially redundant features in the data. So in the following part I'll discuss the 4 least important features picked out by the methods.
 
-# These four methods all agreed that Marg.adhesion and Normal.nucleoli were redundant for the prediction. Other than those, Mitosis and Epith.c.size were also implicated. Overall, the later 3 methods were more similar since they access the importance of variables basing on their contribution to final predictions (although this type of methods are very likely to overfit the data).
+Using mlbench Breast Cancer data, the 4 methods listed in this tutorial yielded relatively similar results as to which variables are redundant. In essence, these methods find variables that are either highly related to others or have no contribution to the final prediction thus can be potentially eliminated from the analysis for the sake of model simplicity.
 
-```
+Correlation method found that "Cell.shape", "Marg.adhesion", "Normal.nucleoli", and "Bl.cromatin" are highly correlated with the rest of variables thus are redundant.
+
+RFE method found Mitosis, Normal.nucleoli, Marg.adhesion, and Cl.thickness were the least helpful in making predictions of cancer malignancy.
+
+Lasso method Epith.c.size, Cell.size, Normal.nucleoli, and Marg.adhesion
+
+Random forest method Mitosis, Epith.c.size, Marg.adhesion，and Normal.nucleoli
+
+These four methods all agreed that Marg.adhesion and Normal.nucleoli were redundant for the prediction. Other than those, Mitosis and Epith.c.size were also implicated. Overall, the later 3 methods were more similar since they access the importance of variables basing on their contribution to final predictions (although this type of methods are very likely to overfit the data).
+
 
 2. Attempt a feature selection method not covered in this tutorial (backward elimination, forward propogation, etc.)
 ```{r}
